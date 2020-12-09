@@ -1,0 +1,32 @@
+#NTU Statistic HW4 Hypothesis Testing & Chi-square Test
+
+#Questions:
+Show the most relevant output (rather than pages of codes) and answer the questions in a concise way.
+Download the data set full_body_scan from https://bit.ly/2ZxoZkU. In November 2014, 1,137 adults were interviewed by telephone about their opinion on the invasive practices airports implemented to uncover potential terrorist attacks. In the file you will find the survey results with responses to the question:
+“Some airports are now using ‘full-body’ digital x-ray machines to electronically screen passengers in airport security lines. Do you think these new x-ray machines should or should not be used at airports?”
+1. We want to know if the answers significantly vary with a respondent’s party affiliation. What are the null and alternative hypotheses?
+2. Make a two-way table with answers in rows and party affiliations in columns. Include column percentages in the table. Show results of a Chi-square test for independence between answer and party.
+3. Do you reject the null hypothesis? Make a conclusion for the hypothesis test in plain English.
+
+#Answers:
+
+1.
+H0 : the answer and the respondent's part affiliation are independent
+HA : the answer and the respondent's part affiliation are not independent
+
+2
+data <- read.csv(file.choose())
+View(data)
+
+table(data)
+scan <- matrix(c(15, 299, 55, 22, 351, 77, 16, 264, 38), nrow = 3, ncol = 3)
+rownames(scan) <- c("do not know / no answer", "should", "should not")
+colnames(scan) <- c("Democrat", "Independent", "Republican")
+scan
+scanpercent <- prop.table(scan, margin = 2)
+scanpercent
+chisq.test(scan)
+
+3.
+p-value = 0.3598 > α = 0.05, do not reject H0, reject HA
+-> The answer and the respondent's part affiliation are independent, which means which political party people are in favor doesn’t affect people’s tendency towards the full-body issue. 
