@@ -1,0 +1,70 @@
+NTU Statistic HW3 Normal Distribution & Exponential Distribution
+
+#Questions
+
+1. a.Draw 𝑛𝑛 values from a uniform distribution between -2 and 2 and calculate the sample mean. as 𝑛𝑛 gets larger?Do this 200 times for 𝑛𝑛 = 2, 5, 15, and 30. Make a histogram for each case. What do you find
+2. Draw 𝑛𝑛 values from an exponential distribution with λ = 1.5 and calculate the sample mean. Do this 200 times for 𝑛𝑛 = 2, 5, 15, and 30. Make a histogram of the sample means for each case. What do you find as 𝑛𝑛 gets larger?
+
+#Anwser:
+
+#1
+meanresult2 <- c()
+for (i in 1:200){
+    samplex <- runif(2, min=-2 , max=2)
+    meanresult2[i] <- mean(samplex)
+}
+hist(meanresult2)
+
+meanresult5 <- c()
+for (i in 1:200){
+  samplex <- runif(5, min=-2 , max=2)
+  meanresult5[i] <- mean(samplex)
+}
+hist(meanresult5)
+
+meanresult15 <- c()
+for (i in 1:200){
+  samplex <- runif(15, min=-2 , max=2)
+  meanresult15[i] <- mean(samplex)
+}
+hist(meanresult15)
+
+meanresult30 <- c()
+for (i in 1:200){
+  samplex <- runif(30, min=-2 , max=2)
+  meanresult30[i] <- mean(samplex)
+}
+hist(meanresult30)
+
+-> When n gets larger, the distribution is more like a normal distribution. (According to Central Limit Theorem)
+
+#2
+meanresult2 <- c()
+for (i in 1:200){
+  samplex <- rexp(2, rate = 1.5)
+  meanresult2[i] <- mean(samplex)
+}
+hist(meanresult2)
+
+meanresult5 <- c()
+for (i in 1:200){
+  samplex <- rexp(5, rate = 1.5)
+  meanresult5[i] <- mean(samplex)
+}
+hist(meanresult5)
+
+meanresult15 <- c()
+for (i in 1:200){
+  samplex <- rexp(15, rate = 1.5)
+  meanresult15[i] <- mean(samplex)
+}
+hist(meanresult15)
+
+meanresult30 <- c()
+for (i in 1:200){
+  samplex <- rexp(30, rate = 1.5)
+  meanresult30[i] <- mean(samplex)
+}
+hist(meanresult30)
+
+-> When n gets larger, the distribution is more like a normal distribution. (According to Central Limit Theorem)
