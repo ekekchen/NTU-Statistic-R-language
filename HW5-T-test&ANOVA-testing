@@ -1,0 +1,149 @@
+#NTU Statistic HW5 T-test & ANOVA testing
+
+#Questions:
+Show the most relevant output (rather than pages of codes) and answer the questions in a concise way.
+Download the data set china from https://bit.ly/2ZxoZkU, which was collected from the 2006 China Health and Nutrition Survey conducted by the UNC Carolina Population Center. The Survey aims to examine the effects of the health, nutrition, and family planning policies and programs implemented by national and local governments. The variable definition is summarized in the following table.
+
+Gender of the parent: 
+1 = male
+2 = female
+
+Educational attainment of the parent: 
+1 = graduated from primary school
+2 = lower middle school degree
+3 = upper middle school degree
+4 = technical or vocational degree 5 = university or college degree
+6 = master’s degree or higher
+9 = unknown
+Hours spent on childcare during the past week, = -99 if unknown
+For the analysis below, you need to first drop the observations with a missing value for any of the variables.
+
+1. Make a summary statistics table that includes the number of observations, mean, standard deviation, minimum, and maximum for child_care. Make a histogram for child_care.
+2. Make a summary statistics table that includes the number of observations, mean, standard deviation, minimum, and maximum for child_care by parents’ gender. Make histograms of child_care by parents’ gender. Compare the distribution of child_care between males and females.
+3. Is there a difference in the average childcare hours between males and females? Draw a conclusion using both the critical value approach and p-value approach.
+4. Make a summary statistics table that includes the number of observations, mean, standard deviation, minimum, and maximum for child_care by parents’ education levels. Make side-by-side box plots for child_care by parents’ education levels. Compare the distribution of child_care among parents’ education levels.
+5. Do average childcare hours vary with parents’ education? Draw a conclusion using both the critical value approach and p-value approach.
+
+#Answers:
+
+#Data cleaning
+china <- read.csv(file.choose())
+china_new <- china[complete.cases(china),]
+china_new1 <- china_new[china_new$child_care != -99, ]
+china_new2 <- china_new1[china_new1$edu != 9, ]
+View(china_new2)
+library(openintro)
+
+#1
+SummaryStat <- function(x){
+  Number <- length(x)
+  Mean <- mean(x)
+  StandardDeviations <- sd(x)
+  Minimum <- min(x)
+  Maximum <- max(x)
+  data.frame(Number, Mean, StandardDeviations, Minimum, Maximum, row.names = NULL)
+}
+SummaryStat(china_new2$child_care)
+
+Browse[1]> SummaryStat(china_new2$child_care)
+  Number     Mean StandardDeviations Minimum Maximum
+1    799 25.01001            28.6975       1     168
+
+hist(china_new2$child_care,main = "Histogram of Child_care", xlab = "Child_care")
+
+#2
+china_newM <- china_new2[china_new2$gender == "1", ]
+china_newF <- china_new2[china_new2$gender == "2", ]
+
+SummaryStat(china_newM$child_care)
+SummaryStat(china_newF$child_care)
+
+Browse[1]> SummaryStat(china_newM$child_care)
+  Number     Mean StandardDeviations Minimum Maximum
+1    313 15.69329           20.65347       1     168
+Browse[1]> SummaryStat(china_newF$child_care)
+  Number    Mean StandardDeviations Minimum Maximum
+1    490 30.9102           31.39549       1     168
+
+hist(china_newM$child_care,main = "Histogram of male Child_care", xlab = "male Child_care")
+
+hist(china_newF$child_care,main = "Histogram of female Child_care", xlab = "female Child_care")
+
+
+#3
+t.test(child_care~gender, data = china_new2, paired = FALSE)
+
+	Welch Two Sample t-test
+
+data:  child_care by gender
+t = -8.2549, df = 796.45, p-value = 6.291e-16
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -18.83770 -11.59989
+sample estimates:
+mean in group 1 mean in group 2 
+       15.73397        30.95277
+
+qt(0.975,796.45)
+Browse[1]> qt(0.975,796.45)
+[1] 1.962947
+
+-> p-value is less than 0.05, reject H0, which means there is difference between childcare of male and female.
+-> The absolute value of t-test (critical value) is 8.2549 > 1.9629, reject H0, which means there is difference between childcare of male and female.
+
+#4
+tapply(china_new2$child_care, china_new2$edu, SummaryStat)
+
+Browse[1]> tapply(china_new2$child_care, china_new2$edu, SummaryStat)
+$`1`
+  Number     Mean StandardDeviations Minimum Maximum
+1    223 25.40359           29.97835       1     168
+
+$`2`
+  Number     Mean StandardDeviations Minimum Maximum
+1    351 24.69231           27.58844       1     168
+
+$`3`
+  Number   Mean StandardDeviations Minimum Maximum
+1     80 22.225           28.80575       1     161
+
+$`4`
+  Number     Mean StandardDeviations Minimum Maximum
+1     78 30.94872           33.36959       1     140
+
+$`5`
+  Number     Mean StandardDeviations Minimum Maximum
+1     67 21.77612           23.30614       1     108
+
+boxplot(china_new2$child_care ~ china_new2$edu,main="Boxplot of educational level & childcare" ,xlab = c("Educational Level"), ylab = c("Child_care"))
+
+#5
+china_new2$edu <- factor(china_new2$edu)
+aov(child_care~edu, data = china_new2)
+
+Browse[1]> aov(child_care~edu, data = china_new2)
+Call:
+   aov(formula = child_care ~ edu, data = china_new2)
+
+Terms:
+                     edu Residuals
+Sum of Squares    4142.1  653047.8
+Deg. of Freedom        4       794
+
+Residual standard error: 28.67888
+Estimated effects may be unbalanced
+
+summary(aov(child_care~edu, data = china_new2))
+
+Browse[1]> summary(aov(child_care~edu, data = china_new2))
+             Df Sum Sq Mean Sq F value Pr(>F)
+edu           4   4142  1035.5   1.259  0.285
+Residuals   794 653048   822.5      
+
+qf(0.95, df1 = 4, df2 = 794)
+Browse[1]> qf(0.95, df1 = 4, df2 = 794)
+[1] 2.383146
+
+-> p-value = 0.285 is greater than 0.05, accept H0, which means there is no difference between childcare of different educational levels.
+-> The absolute value of F-value (critical value) is 1.259 < 2.383146, accept H0, which means there is no difference between childcare of different educational levels.
+
