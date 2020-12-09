@@ -1,0 +1,206 @@
+#Statistic HW1 : summarize & visualize data
+
+#Questions:
+Show the most relevant output (rather than pages of codes) and answer the questions in a concise way. The data sets for the following work are available at https://bit.ly/2ZxoZkU.
+1. Replicate the following figures and tables from OpenIntro Statistics 4th Edition. Add axis titles and figure titles to the figures. See R graph commands at https://bit.ly/30JxSpf.
+a) Figure 1.8, 1.9 (data: county)
+b) Figure 2.6, 2.10 (data: loan50)
+c) Figure 2.17, 2.18, 2.23 (data: loans_full_schema)
+2. Generate a summary statistics table for the variables annual_income and total_credit_line from the loans_full_schema data. What are the mean, median, standard deviation, first quartile, and third quartile of the two variables?
+
+#Code:
+1.
+a. 
+Figure 1.8
+county <- read.csv(file.choose())
+plot(county$homeownership ~ county$multi_unit,
+     xlab = "Percent of Units in Multi-Unit Structures", 
+     ylab = "Homeonwership Rate", 
+     pch = 20, col = COL[1,3], axes = FALSE, 
+     xlim = c(0,80), ylim = c(0, 100) ) 
+AxisInPercent(2, at = seq(0, 80, 20) ) 
+AxisInPercent(1, at = seq(0, 80, 20)) 
+box() 
+title("Figure 1.8")
+
+Figure 1.9
+county
+county <- read.csv(file.choose())
+plot(county$pop_change ~ county$median_hh_income,
+     xlab = "Median Household Income", 
+     ylab = "Polulation Change over 7 Years", 
+     pch = 20, col = COL[1,3], axes = FALSE, 
+     xlim = c(0,130) *1000, ylim = c(-15, 25) ) 
+AxisInPercent(2, at = seq(-20, 30, 10)) 
+AxisInDollars(1, at = seq(0,140,20) *1000)
+box() 
+title("Figure 1.9")
+
+
+b.
+Figure 2.6
+loan50 <- read.csv(file.choose())
+x <- loan50$interest_rate
+hist(x,
+     breaks = seq(5, 27.5, 2.5), 
+     xlab = 'Interest Rate', 
+     ylab = "Frequency", 
+     col = COL[1], 
+     border = COL[5],
+     axes = FALSE,
+     main = 'Figure 2.6') 
+axis(2) 
+AxisInPercent(1, pretty(x))
+
+Figure 2.10
+a <- loan50$interest_rate
+boxPlot(a, 
+        axes = FALSE,
+        ylab = "Interest Rate",
+        ylim = range(a) + sd(a) * c(-1,1) * 0.2) 
+AxisInPercent(2, c(0, pretty(a)))
+
+the.seed <- 2 
+set.seed(the.seed) 
+pt.jitter <- 0.05
+nco <- 50
+cutoffs <- seq(0.9 * min(a), max(a), length.out = nco)
+for (i in 2:nco) {
+        these <- which(cutoffs[i - 1] < a & a <= cutoffs[i])
+        lt <- length(these)
+        if (lt == 0) {
+                next
+        }
+        x <- pt.jitter * (1:lt)
+        x <- x - mean(x)
+        points(rep(0.4, lt) + x, a[these],
+               col = rep(COL[1, 3], 25), pch = 19)
+}
+title(main = 'Figure 2.10')
+
+c.
+Figure 2.17
+loans_full_schema <- read.csv(file.choose())
+table(loans_full_schema$application_type)
+table(loans_full_schema$homeownership)
+figure2.17 <- matrix(c(3496, 3839, 1170, 362, 950, 183, 1495), nrow = 2, ncol = 3, byrow = TRUE)
+rownames(figure2.17) <- c('individual', 'joint')
+colnames(figure2.17) <- c('rent', 'mortage','own')
+tab <- as.table(figure2.17) 
+margin <- addmargins(tab)  
+margin
+
+            rent mortage   own   Sum
+individual  3496    3839  1170  8505
+joint        362     950   183  1495
+Sum         3858    4789  1353 10000
+
+Figure 2.18
+figure2.18 <- matrix(c(3858, 4789, 1353), nrow = 3, byrow = FALSE)
+rownames(figure2.18) <- c('rent', 'mortage', 'own')
+colnames(figure2.18) <- c('Count')
+tab <- as.table(figure2.18) 
+margin <- addmargins(tab)  
+margin
+
+homeonwer  Count   Sum
+rent         3858  3858
+mortage      4789  4789
+own         1353  1353
+Sum         10000 10000
+
+Figure 2.23
+#type A
+figure2.17 <- matrix(c(3496, 362, 3839, 950, 1170, 183), nrow = 3, ncol = 2, byrow = TRUE)
+figure2.17 <- data.frame(figure2.17)
+colnames(figure2.17) <- c('joint', 'individual')
+rownames(figure2.17) <- c('rent', 'mortage', 'own')
+
+tab <- figure2.17
+
+ylim <- c(0, max(apply(tab, 1, sum)))
+barplot(apply(tab, 1, sum),
+        col = COL[3],
+        ylim = ylim)
+tabTemp <- tab[,1]
+names(tabTemp) <- NULL
+barplot(tabTemp,
+        col = COL[1],
+        add = TRUE,
+        axes = FALSE)
+
+abline(h = 0)
+legend("topright",
+       fill = COL[c(3,1)],
+       legend = c('joint', 'individual') )
+par(las = 0)
+mtext("Frequency", 2, 2.9)
+title(main = 'Bar Plot for Figure 2.23 (Type a)')
+
+#type B
+figure2.17 <- matrix(c(3496, 362, 3839, 950, 1170, 183), nrow = 3, ncol = 2, byrow = TRUE)
+figure2.17 <- data.frame(figure2.17)
+colnames(figure2.17) <- c('joint', 'individual')
+rownames(figure2.17) <- c('rent', 'mortage', 'own')
+
+tab <- figure2.17
+
+barplot(t(tab),
+        ylim = ylim,
+        col = COL[c(1, 3)], beside = TRUE)
+abline(h = 0)
+legend("topright",
+       fill = COL[c(3,1)],
+       legend = c('joint', 'individual')) 
+par(las = 0)
+mtext("Frequency", 2, 2.9)
+title(main = 'Bar Plot for Figure 2.23 (Type b)')
+
+#type C
+
+figure2.17 <- matrix(c(3496, 362, 3839, 950, 1170, 183), nrow = 3, ncol = 2, byrow = TRUE)
+colnames(figure2.17) <- c('joint', 'individual')
+rownames(figure2.17) <- c('rent', 'mortage', 'own')
+
+tab <- as.table(figure2.17)
+
+rp <- prop.table(tab, 1)
+cp <- prop.table(tab, 2)
+
+barplot(apply(tab, 1, sum) / apply(tab, 1, sum), col = COL[3])
+tabTemp <- rp[, 1]
+names(tabTemp) <- NULL
+barplot(tabTemp,
+        col = COL[1],
+        add = TRUE,
+        axes = FALSE)
+legend(1.65, 0.7,
+       fill = COL[c(3,1)],
+       legend = c('joint', 'individual'), 
+       bg = "white")
+abline(h = 0)
+par(las = 0)
+mtext("Proportion", 2, 2.9)
+title(main = 'Bar Plot for Figure 2.17 (Type c)')
+
+2.
+loans_full_schema <- read.csv(file.choose())
+summary(loans_full_schema$annual_income)
+sd(loans_full_schema$annual_income)
+
+summary(loans_full_schema$total_credit_limit)
+sd(loans_full_schema$total_credit_limit)
+
+annual_income:
+> summary(loans_full_schema$annual_income)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0   45000   65000   79222   95000 2300000 
+> sd(loans_full_schema$annual_income)
+[1] 64734.29
+
+total_credit_limit:
+> summary(loans_full_schema$total_credit_limit)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0   51594  114667  183606  267550 3386034 
+> sd(loans_full_schema$total_credit_limit)
+[1] 187632.7
