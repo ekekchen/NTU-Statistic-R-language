@@ -1,0 +1,52 @@
+#Statistic HW2 Probability & Binomial Distribution
+
+#Questions:
+1. Simulate 1000 coin flips and calculate the fraction of heads for the number of coin flips of 1, 2, 3, ..., 1000. To do this, first generate 1000 random numbers between 0 and 1. Then, generate an indicator variable equal to one (a head) if the random number is greater than 0.5, and zero otherwise. Make a plot to show the fraction of heads for the number of flips of 1, 2, 3, ..., 1000. Discuss your findings.
+2. Draw n values from a normal distribution with 𝜇𝜇 = 2 and 𝜎𝜎 = 2.5. Make a histogram and calculate the simulated mean and standard deviation. Compare the simulated results with the theoretical counterparts. Do this for n = 20, 100, 500, and 1000. Briefly discuss your findings.
+3. Draw 200 values from a binomial distribution with 𝑝𝑝 = 0.1 and 𝑛𝑛 = 10, 50, 100, and 500. Note that 𝑛𝑛 here is the number of trials for a binomial distribution. Make a histogram for each case. What do you find as 𝑛𝑛 gets larger?
+
+#Answers:
+set.seed(12345)
+xrunif <- runif(1000, min = 0, max = 1) xrunif
+indicator <- ifelse(xrunif > 0.5, 1, 0) fraction <- c()
+for (i in c(1:1000)) {
+fraction[i] = sum(indicator[1:i])/i
+}
+plot(x = seq(from = 1, to = 1000, by = 1), y = fraction, type = "l", U(0,1)")
+main = "Fraction of
+ -> 丟了一千次骰子最後平均會趨向期望值 = 0.5，意指長期來說出現頭部跟底 部的次數一樣。
+#Computer Exercise 2
+# n=20
+set.seed(12346)
+xrnorm <- rnorm(20, mean = 2, sd = 2.5) xrnorm
+hist(xrnorm)
+# n=100
+set.seed(12347)
+xrnorm <- rnorm(100, mean = 2, sd = 2.5) xrnorm
+hist(xrnorm)
+ 
+# n=500
+set.seed(12348)
+xrnorm <- rnorm(500, mean = 2, sd = 2.5) xrnorm
+hist(xrnorm)
+# n=1000
+set.seed(12348)
+xrnorm <- rnorm(1000, mean = 2, sd = 2.5) xrnorm
+hist(xrnorm)
+-> When n gets bigger, the distribution will more like a normal distribution.
+  
+#Computer Exercise 3
+set.seed(12349)
+xrbinom <- rbinom(200, size = 10, prob = 0.1) xrbinom
+hist(xrbinom)
+ set.seed(12350)
+xrbinom <- rbinom(200, size = 50, prob = 0.1) xrbinom
+hist(xrbinom)
+ 
+set.seed(12351)
+xrbinom <- rbinom(200, size = 100, prob = 0.1) xrbinom
+hist(xrbinom)
+set.seed(12351)
+xrbinom <- rbinom(200, size = 500, prob = 0.1) xrbinom
+hist(xrbinom)
+-> When n gets larger, the distribution would more like a normal distribution.
