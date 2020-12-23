@@ -1,0 +1,156 @@
+NTU Statistic R language HW6: Simple-Linear-Regression
+
+#Questions
+Part One: Computer exercises
+Download xydata.csv from the course website.
+1. Calculate the correlation coefficient between each pair of 𝑥 and 𝑦. That is, calculate the correlation between 𝑥1 and 𝑦1, the correlation between 𝑥2 and 𝑦2, and so on. Compare the correlation coefficients.
+2. Fit the least squares regression line to each pair of data:
+𝑦1 = 𝛼0 + 𝛼1𝑥1 + 𝑒1 
+𝑦2 = 𝛽0 + 𝛽1𝑥2 + 𝑒2 
+𝑦3 = 𝛾0 + 𝛾1𝑥3 + 𝑒3 
+𝑦4 = 𝛿0 + 𝛿1𝑥4 + 𝑒4.
+Compare the estimates of the slope coefficients (𝛼𝛼1, 𝛽𝛽1, 𝛾𝛾1, 𝛿𝛿1).
+3. Make a scatterplot for each pair of data and a residual plot for each regression in Part 2.
+Discuss whether fitting a linear model would be appropriate for each pair of data.
+
+#Code:
+#1
+cor(data$x1,data$y1)
+cor(data$x2,data$y2)
+cor(data$x3,data$y3)
+cor(data$x4,data$y4)
+
+> cor(data$x1,data$y1)
+[1] 0.8164205
+> cor(data$x2,data$y2)
+[1] 0.8162365
+> cor(data$x3,data$y3)
+[1] 0.8162867
+> cor(data$x4,data$y4)
+[1] 0.8165214
+
+#2
+> summary(fit1)
+
+Call:
+lm(formula = y1 ~ x1, data = data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-1.92127 -0.45577 -0.04136  0.70941  1.83882 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   3.0001     1.1247   2.667  0.02573 * 
+x1            0.5001     0.1179   4.241  0.00217 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.237 on 9 degrees of freedom
+Multiple R-squared:  0.6665,	Adjusted R-squared:  0.6295 
+F-statistic: 17.99 on 1 and 9 DF,  p-value: 0.00217
+
+> summary(fit2)
+
+Call:
+lm(formula = y2 ~ x2, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.9009 -0.7609  0.1291  0.9491  1.2691 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)    3.001      1.125   2.667  0.02576 * 
+x2             0.500      0.118   4.239  0.00218 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.237 on 9 degrees of freedom
+Multiple R-squared:  0.6662,	Adjusted R-squared:  0.6292 
+F-statistic: 17.97 on 1 and 9 DF,  p-value: 0.002179
+
+> summary(fit3)
+
+Call:
+lm(formula = y3 ~ x3, data = data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.1586 -0.6146 -0.2303  0.1540  3.2411 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   3.0025     1.1245   2.670  0.02562 * 
+x3            0.4997     0.1179   4.239  0.00218 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.236 on 9 degrees of freedom
+Multiple R-squared:  0.6663,	Adjusted R-squared:  0.6292 
+F-statistic: 17.97 on 1 and 9 DF,  p-value: 0.002176
+
+> summary(fit4)
+
+Call:
+lm(formula = y4 ~ x4, data = data)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-1.751 -0.831  0.000  0.809  1.839 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept)   3.0017     1.1239   2.671  0.02559 * 
+x4            0.4999     0.1178   4.243  0.00216 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 1.236 on 9 degrees of freedom
+Multiple R-squared:  0.6667,	Adjusted R-squared:  0.6297 
+F-statistic:    18 on 1 and 9 DF,  p-value: 0.002165
+
+#3
+scatter.smooth(x = data$x1, y = data$y1, 
+               xlab = "X1", 
+               ylab = "Y1", 
+               main = "Scatterplot - x1 & y1") 
+
+scatter.smooth(x = data$x2, y = data$y2, 
+               xlab = "X2", 
+               ylab = "Y2", 
+               main = "Scatterplot - x2 & y2")
+
+scatter.smooth(x = data$x3, y = data$y3, 
+               xlab = "X3", 
+               ylab = "Y3", 
+               main = "Scatterplot - x3 & y3")
+
+scatter.smooth(x = data$x4, y = data$y4, 
+               xlab = "X4", 
+               ylab = "Y4", 
+               main = "Scatterplot - x4 & y4") 
+
+plot(x = data$x1, y = fit1$residuals,
+     xlab = "X1",
+     ylab = "Residuals",
+     main = "Residual Plot - fit1")
+abline(h=0)
+
+plot(x = data$x2, y = fit2$residuals,
+     xlab = "X2",
+     ylab = "Residuals",
+     main = "Residual Plot - fit2")
+abline(h=0)
+
+plot(x = data$x3, y = fit3$residuals,
+     xlab = "X3",
+     ylab = "Residuals",
+     main = "Residual Plot - fit3")
+abline(h=0)
+
+plot(x = data$x4, y = fit1$residuals,
+     xlab = "X4",
+     ylab = "Residuals",
+     main = "Residual Plot - fit4")
+abline(h=0)
